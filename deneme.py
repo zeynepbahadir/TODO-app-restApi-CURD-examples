@@ -5,20 +5,6 @@ import sqlOperations
 sqlOp = sqlOperations.SqlOperation()
 sqlOp.create_table()
 
-taskToAdd = (10, "todo10", False)
-#sqlOp.add_task(taskToAdd)
-
-taskToUpdate = 5
-#sqlOp.update_task(taskToUpdate)
-
-gtask = 6
-#sqlOp.get_task(gtask)
-
-deleteID = 5
-#sqlOp.delete_task(deleteID)
-
-#sqlOp.select_all_tasks()
-
 
 app = Flask('todoapp')
 
