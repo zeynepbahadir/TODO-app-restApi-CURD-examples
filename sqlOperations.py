@@ -7,7 +7,7 @@ import bson
 class SqlOperation:
 
     def __init__(self):
-        self.db_path = "/Users/zeynep/workplace/zg/TodoAppExamples/TODO-app-restApi-CURD-examples/todoDB.db"
+        self.db_path = "todoDB.db"
         try:
             conn_ = sqlite3.connect(self.db_path, check_same_thread=False)
             print("sqlite3 version is:", sqlite3.version)
