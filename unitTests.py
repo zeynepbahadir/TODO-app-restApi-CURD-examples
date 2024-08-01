@@ -2,6 +2,7 @@ import json
 import unittest
 from todoApp import app
 
+
 class TestMethods(unittest.TestCase):
     def test_tasklist_return_status_200(self):
         with app.test_client() as client:
