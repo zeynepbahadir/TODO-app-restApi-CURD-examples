@@ -11,7 +11,7 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    python-version: 3.9
+    
 
     steps:
       - name: Checkout
