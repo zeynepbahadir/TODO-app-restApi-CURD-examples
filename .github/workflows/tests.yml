@@ -1,0 +1,28 @@
+name: Run Tests
+
+on:
+  push:
+    branches: 
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  tests:
+    runs-on: 
+      os: ubuntu-latest
+      python-version: 3.9
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: 
+          python -m pip install --upgrade pip
+          pip install flask
+          pip install sqlite3
+          pip install unittest
+          pip install json
+      - name: Run tests
+        run: unitTests
