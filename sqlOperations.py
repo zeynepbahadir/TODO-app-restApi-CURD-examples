@@ -19,6 +19,7 @@ class SqlOperation:
 
 
     def create_table(self):
+        """Create a table named 'tasks' with the columns 'id', 'content', 'status'."""
         sql = """ CREATE TABLE IF NOT EXISTS tasks (
                                         id integer,
                                         content text,
@@ -32,6 +33,7 @@ class SqlOperation:
             raise
 
     def select_all_tasks(self):
+        """Creating and returning all the task list."""
         mlist = []
         try:
             cur = self.conn_.cursor()
@@ -47,6 +49,7 @@ class SqlOperation:
             raise
 
     def add_task(self, task_):
+        """Adding a new task to database."""
         sql = ''' INSERT INTO tasks(id, content, status)
                   VALUES(?,?,?)'''
         try:
@@ -59,6 +62,7 @@ class SqlOperation:
             raise
 
     def get_task(self, id_):
+        """Fetching a spesific task with the given id."""
         sql = "SELECT * FROM tasks WHERE id = ?"
         try:
             cur = self.conn_.cursor()
@@ -71,6 +75,7 @@ class SqlOperation:
             raise
 
     def update_task(self, id_):
+        """Update a tasks status between 0-1. (done - not done)"""
         sql1 = "SELECT * FROM tasks WHERE id = ?"
         sql2 = '''UPDATE tasks
                 SET status = ?
@@ -92,6 +97,7 @@ class SqlOperation:
             raise
 
     def delete_task(self, id_):
+        """Delete a task with the given id."""
         sql = 'DELETE FROM tasks WHERE id = ?'
         try:
             cur = self.conn_.cursor()
