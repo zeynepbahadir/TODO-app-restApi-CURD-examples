@@ -67,12 +67,14 @@ class TestClass_00_TodoApp(unittest.TestCase):
     def test_05_get_task_statuscode_ok(self):
         """Test successful task retrieval."""        
         # Get task
+        self.app.post('/api/tasks', json=self.sample_task)
         id = self.sql_op.fetch_last_id()
         response = self.app.get(f'/api/tasks/{id}')
         self.assertEqual(response.status_code, HTTPStatus.OK)
         
     def test_06_get_task_success(self):
         """Test successful task retrieval."""
+        self.app.post('/api/tasks', json=self.sample_task)
         id = self.sql_op.fetch_last_id()
         response = self.app.get(f'/api/tasks/{id}')
         task_data = response.json
