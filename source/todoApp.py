@@ -1,11 +1,10 @@
 from flask import Flask, jsonify, request, abort
 from http import HTTPStatus
-import json
-import sqlOperations
+from sqlOperations import SqlOperation
 from typing import Dict, Any
 
 app = Flask('todoapp')
-sqlOp = sqlOperations.SqlOperation()
+sqlOp = SqlOperation("todoDB.db")
 sqlOp.create_table()
 
 @app.route('/api/tasks', methods=['GET'])
@@ -22,10 +21,12 @@ def create_task():
     """Create a new task."""
     try:
         data = request.get_json()
-        if not data or 'id' not in data or 'content' not in data:
+        if not data or 'content' not in data:
+        #if not data or 'id' not in data or 'content' not in data:
             return jsonify({'error': 'Missing required fields'}), HTTPStatus.BAD_REQUEST
         
-        task = (data['id'], data['content'], False)
+        task = data['content']
+        #task = (data['id'], data['content'], False)
         sqlOp.add_task(task)
         return jsonify({'message': 'Task created successfully'}), HTTPStatus.CREATED
     except Exception as e:
