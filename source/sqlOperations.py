@@ -128,6 +128,5 @@ class SqlOperation:
         cur = self.conn_.cursor()
         cur.execute("SELECT MAX(id) FROM tasks")
         result = cur.fetchone()[0]
-        #x = cur.execute("select * from tasks order by id DESC limit 1;").fetchone()
         return result
     
