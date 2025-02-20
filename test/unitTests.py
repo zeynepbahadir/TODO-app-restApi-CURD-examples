@@ -148,7 +148,6 @@ class TestClass_00_TodoApp(unittest.TestCase):
         #except Exception:
         pass
 
-
 class TestClass_01_SQLOP(unittest.TestCase):
     """Test cases for SQL Operations."""
 

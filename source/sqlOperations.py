@@ -1,8 +1,6 @@
-import json
 import sqlite3
 from sqlite3 import Error
-import bson
-
+from typing import List, Dict
 
 class SqlOperation:
 
@@ -35,9 +33,8 @@ class SqlOperation:
             print(f"Failed to generate unique ID: {e}")
             raise
 
-    def create_table(self):
+    def create_table(self) -> None:
         """Create a table named 'tasks' with the columns 'id', 'content', 'status'."""
-                                        #id integer NOT NULL primary key autoincrement,
         sql = """ CREATE TABLE IF NOT EXISTS tasks (            
                                         id INTEGER PRIMARY KEY,
                                         content TEXT NOT NULL,
@@ -50,7 +47,7 @@ class SqlOperation:
             print(f"Failed to creata table: {e}")
             raise
 
-    def select_all_tasks(self):
+    def select_all_tasks(self) -> List:
         """Creating and returning all the task list."""
         mlist = []
         try:
@@ -66,7 +63,7 @@ class SqlOperation:
             print(f"Failed to selecting all tasks from database: {e}")
             raise
 
-    def add_task(self, task_):
+    def add_task(self, task_) -> None:
         """Adding a new task to database."""
         #sql = ''' INSERT INTO tasks(id, content, status)
         sql = ''' INSERT INTO tasks(id, content, status)
@@ -81,20 +78,19 @@ class SqlOperation:
             print(f"Failed to adding task to database: {e}")
             raise
 
-    def get_task(self, id_):
+    def get_task(self, id_) -> Dict:
         """Fetching a spesific task with the given id."""
         sql = "SELECT * FROM tasks WHERE id = ?"
         try:
             cur = self.conn_.cursor()
             cur.execute(sql, (id_,))
             gtask = cur.fetchone()
-            print(gtask)
             return gtask
         except Error as e:
             print(f"Failed to selecting task from database: {e}")
             raise
 
-    def update_task(self, id_):
+    def update_task(self, id_) -> None:
         """Update a tasks status between 0-1. (done - not done)"""
         sql1 = "SELECT * FROM tasks WHERE id = ?"
         sql2 = '''UPDATE tasks
@@ -116,7 +112,7 @@ class SqlOperation:
             print(f"Failed to update task: {e}")
             raise
 
-    def delete_task(self, id_):
+    def delete_task(self, id_) -> None:
         """Delete a task with the given id."""
         sql = 'DELETE FROM tasks WHERE id = ?'
         try:
@@ -127,10 +123,10 @@ class SqlOperation:
             print(f"Failed to deleting task from database: {e}")
             raise
 
-    def fetch_last_id(self):
+    def fetch_last_id(self) -> int:
+        """Finds the id of the last row."""
         cur = self.conn_.cursor()
         cur.execute("SELECT MAX(id) FROM tasks")
         result = cur.fetchone()[0]
-        #x = cur.execute("select * from tasks order by id DESC limit 1;").fetchone()
         return result
     
