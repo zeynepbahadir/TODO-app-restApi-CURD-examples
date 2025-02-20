@@ -6,9 +6,9 @@ import bson
 
 class SqlOperation:
 
-    def __init__(self):
+    def __init__(self, db_path):
         """Initialize database connection."""
-        self.db_path = "todoDB.db"
+        self.db_path = db_path #"todoDB.db"
         try:
             conn_ = sqlite3.connect(self.db_path, check_same_thread=False)
             print("sqlite3 version is:", sqlite3.version)
@@ -17,12 +17,31 @@ class SqlOperation:
             raise
         self.conn_ = conn_
 
+    def generate_unique_id(self) -> int:
+        """Generate a unique ID for a new task.
+        
+        Returns:
+            int: New unique ID (last ID + 1 or 1 if table is empty)
+        """
+        try:
+            cur = self.conn_.cursor()
+            # Get the maximum ID currently in use
+                                                    #TODO add reusable function 
+            cur.execute("SELECT MAX(id) FROM tasks")
+            result = cur.fetchone()[0]
+            # If table is empty, start with 1, else increment the max id
+            return 1 if result is None else result + 1
+        except Error as e:
+            print(f"Failed to generate unique ID: {e}")
+            raise
 
     def create_table(self):
-        sql = """ CREATE TABLE IF NOT EXISTS tasks (
-                                        id integer,
-                                        content text,
-                                        status bool
+        """Create a table named 'tasks' with the columns 'id', 'content', 'status'."""
+                                        #id integer NOT NULL primary key autoincrement,
+        sql = """ CREATE TABLE IF NOT EXISTS tasks (            
+                                        id INTEGER PRIMARY KEY,
+                                        content TEXT NOT NULL,
+                                        status BOOLEAN NOT NULL DEFAULT FALSE
                                     );"""
         try:
             cur = self.conn_.cursor()
@@ -32,6 +51,7 @@ class SqlOperation:
             raise
 
     def select_all_tasks(self):
+        """Creating and returning all the task list."""
         mlist = []
         try:
             cur = self.conn_.cursor()
@@ -47,11 +67,14 @@ class SqlOperation:
             raise
 
     def add_task(self, task_):
+        """Adding a new task to database."""
+        #sql = ''' INSERT INTO tasks(id, content, status)
         sql = ''' INSERT INTO tasks(id, content, status)
                   VALUES(?,?,?)'''
         try:
+            id = self.generate_unique_id()
             cur = self.conn_.cursor()
-            cur.execute(sql, task_)
+            cur.execute(sql, (id, task_, False))
             self.conn_.commit()
             return cur.lastrowid
         except Error as e:
@@ -59,6 +82,7 @@ class SqlOperation:
             raise
 
     def get_task(self, id_):
+        """Fetching a spesific task with the given id."""
         sql = "SELECT * FROM tasks WHERE id = ?"
         try:
             cur = self.conn_.cursor()
@@ -71,6 +95,7 @@ class SqlOperation:
             raise
 
     def update_task(self, id_):
+        """Update a tasks status between 0-1. (done - not done)"""
         sql1 = "SELECT * FROM tasks WHERE id = ?"
         sql2 = '''UPDATE tasks
                 SET status = ?
@@ -92,6 +117,7 @@ class SqlOperation:
             raise
 
     def delete_task(self, id_):
+        """Delete a task with the given id."""
         sql = 'DELETE FROM tasks WHERE id = ?'
         try:
             cur = self.conn_.cursor()
@@ -100,3 +126,11 @@ class SqlOperation:
         except Error as e:
             print(f"Failed to deleting task from database: {e}")
             raise
+
+    def fetch_last_id(self):
+        cur = self.conn_.cursor()
+        cur.execute("SELECT MAX(id) FROM tasks")
+        result = cur.fetchone()[0]
+        #x = cur.execute("select * from tasks order by id DESC limit 1;").fetchone()
+        return result
+    
