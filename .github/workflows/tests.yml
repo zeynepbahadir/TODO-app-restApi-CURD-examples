@@ -20,4 +20,4 @@ jobs:
           pip install flask
           pip install bson
       - name: Run tests
-        run: python unitTests.py
+        run: python test/unitTests.py
